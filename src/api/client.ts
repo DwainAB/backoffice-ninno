@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "https://backend-ninno-production.up.railway.app";
 const TOKEN_KEY = "ninno_admin_token";
 
 export function getToken(): string | null {
