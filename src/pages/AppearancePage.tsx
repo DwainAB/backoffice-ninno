@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getConfig, uploadBackground, uploadLogo, type AppConfig } from "../api/client";
+import { getConfig, uploadBackground, uploadBackgroundOther, uploadLogo, type AppConfig } from "../api/client";
 import ImageUploadCard from "../components/ImageUploadCard";
 
 export default function AppearancePage() {
@@ -18,11 +18,20 @@ export default function AppearancePage() {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
       <ImageUploadCard
-        title="Image de fond"
-        description="Fond affiché sur les écrans de l'application."
+        title="Image de fond (Accueil)"
+        description="Fond affiché sur l'écran d'accueil de l'application."
         currentUrl={config.backgroundImageUrl}
         onUpload={async (file) => {
           const updated = await uploadBackground(file);
+          setConfig(updated);
+        }}
+      />
+      <ImageUploadCard
+        title="Image de fond (Autres pages)"
+        description="Fond affiché sur tous les autres écrans de l'application."
+        currentUrl={config.backgroundOtherImageUrl}
+        onUpload={async (file) => {
+          const updated = await uploadBackgroundOther(file);
           setConfig(updated);
         }}
       />

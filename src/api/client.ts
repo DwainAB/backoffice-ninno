@@ -45,6 +45,7 @@ async function request(path: string, options: RequestInit = {}) {
 
 export interface AppConfig {
   backgroundImageUrl: string;
+  backgroundOtherImageUrl: string;
   logoImageUrl: string;
 }
 
@@ -74,6 +75,12 @@ export function uploadBackground(file: File): Promise<AppConfig> {
   const form = new FormData();
   form.append("image", file);
   return request("/admin/config/background", { method: "POST", body: form });
+}
+
+export function uploadBackgroundOther(file: File): Promise<AppConfig> {
+  const form = new FormData();
+  form.append("image", file);
+  return request("/admin/config/background/other", { method: "POST", body: form });
 }
 
 export function uploadLogo(file: File): Promise<AppConfig> {
