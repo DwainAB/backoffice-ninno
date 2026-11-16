@@ -126,3 +126,39 @@ export function updateNote(id: number, input: NoteInput): Promise<Note> {
 export function deleteNote(id: number): Promise<null> {
   return request(`/admin/notes/${id}`, { method: "DELETE" });
 }
+
+export interface SerialNumber {
+  code: string;
+  batch: string;
+  coffretName: string | null;
+  activatedAt: string | null;
+  createdAt: string;
+  childFirstName: string | null;
+  parentEmail: string | null;
+}
+
+export function getSerials(): Promise<SerialNumber[]> {
+  return request("/admin/serials");
+}
+
+// Génère un lot et renvoie le CSV (une colonne numero_de_serie) à transmettre à l'imprimeur.
+export async function createSerialBatch(count: number, coffretName: string): Promise<{ filename: string; csv: Blob }> {
+  const token = getToken();
+  const res = await fetch(`${API_URL}/admin/serials/batch`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: JSON.stringify({ count, coffretName }),
+  });
+  if (!res.ok) {
+    let message = res.statusText;
+    try {
+      message = (await res.json()).error ?? message;
+    } catch {
+      // pas de corps JSON
+    }
+    throw new ApiError(res.status, message);
+  }
+  const disposition = res.headers.get("Content-Disposition") ?? "";
+  const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? "ninno-serials.csv";
+  return { filename, csv: await res.blob() };
+}

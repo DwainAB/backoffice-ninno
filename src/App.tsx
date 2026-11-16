@@ -3,8 +3,9 @@ import { clearToken, getToken } from "./api/client";
 import LoginPage from "./pages/LoginPage";
 import AppearancePage from "./pages/AppearancePage";
 import NotesPage from "./pages/NotesPage";
+import SerialsPage from "./pages/SerialsPage";
 
-type View = "appearance" | "notes";
+type View = "appearance" | "notes" | "serials";
 
 export default function App() {
   const [authenticated, setAuthenticated] = useState(!!getToken());
@@ -37,6 +38,9 @@ export default function App() {
           <button onClick={() => setView("notes")} style={navButtonStyle(view === "notes")}>
             Notes
           </button>
+          <button onClick={() => setView("serials")} style={navButtonStyle(view === "serials")}>
+            Numéros de série
+          </button>
           <button
             onClick={() => {
               clearToken();
@@ -56,7 +60,7 @@ export default function App() {
       </header>
 
       <main style={{ flex: 1, padding: 24, maxWidth: 1000, width: "100%", margin: "0 auto" }}>
-        {view === "appearance" ? <AppearancePage /> : <NotesPage />}
+        {view === "appearance" ? <AppearancePage /> : view === "notes" ? <NotesPage /> : <SerialsPage />}
       </main>
     </div>
   );
