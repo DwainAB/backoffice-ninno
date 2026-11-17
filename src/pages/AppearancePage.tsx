@@ -18,8 +18,9 @@ export default function AppearancePage() {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
       <ImageUploadCard
-        title="Image de fond (Accueil)"
-        description="Fond affiché sur l'écran d'accueil de l'application."
+        title="Fond (Accueil)"
+        description="Image ou vidéo (MP4 / WebM, 50 Mo max., jouée en boucle sans son) affichée sur l'écran d'accueil."
+        allowVideo
         currentUrl={config.backgroundImageUrl}
         onUpload={async (file) => {
           const updated = await uploadBackground(file);
@@ -27,8 +28,9 @@ export default function AppearancePage() {
         }}
       />
       <ImageUploadCard
-        title="Image de fond (Autres pages)"
-        description="Fond affiché sur tous les autres écrans de l'application."
+        title="Fond (Autres pages)"
+        description="Image ou vidéo (MP4 / WebM, 50 Mo max., jouée en boucle sans son) affichée sur tous les autres écrans."
+        allowVideo
         currentUrl={config.backgroundOtherImageUrl}
         onUpload={async (file) => {
           const updated = await uploadBackgroundOther(file);

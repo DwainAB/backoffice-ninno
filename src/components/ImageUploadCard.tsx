@@ -5,11 +5,14 @@ export default function ImageUploadCard({
   description,
   currentUrl,
   onUpload,
+  allowVideo = false,
 }: {
   title: string;
   description: string;
   currentUrl: string;
   onUpload: (file: File) => Promise<void>;
+  /** Accepte aussi une vidéo MP4 / WebM (fond joué en boucle dans l'app). */
+  allowVideo?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -34,14 +37,15 @@ export default function ImageUploadCard({
       setFile(null);
       setPreview(null);
       if (inputRef.current) inputRef.current.value = "";
-    } catch {
-      setError("Échec de l'envoi. Réessayez.");
+    } catch (err) {
+      setError(err instanceof Error && err.message ? err.message : "Échec de l'envoi. Réessayez.");
     } finally {
       setSaving(false);
     }
   }
 
   const displayUrl = preview ?? currentUrl;
+  const isVideo = file ? file.type.startsWith("video/") : /\.(mp4|webm)(\?|#|$)/i.test(currentUrl ?? "");
 
   return (
     <div
@@ -66,19 +70,23 @@ export default function ImageUploadCard({
           height: 160,
           borderRadius: 8,
           border: "1px solid var(--border)",
-          background: displayUrl
+          background: displayUrl && !isVideo
             ? `center/cover no-repeat url(${displayUrl})`
             : "var(--bg)",
+          overflow: "hidden",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           color: "var(--text)",
         }}
       >
+        {displayUrl && isVideo && (
+          <video src={displayUrl} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        )}
         {!displayUrl && "Aucune image"}
       </div>
 
-      <input ref={inputRef} type="file" accept="image/*" onChange={handleFileChange} />
+      <input ref={inputRef} type="file" accept={allowVideo ? "image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm" : "image/*"} onChange={handleFileChange} />
 
       {error && <p style={{ color: "var(--danger)", margin: 0 }}>{error}</p>}
 

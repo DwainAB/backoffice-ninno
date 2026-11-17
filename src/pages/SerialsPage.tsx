@@ -83,7 +83,7 @@ export default function SerialsPage() {
             <th style={cellStyle}>Coffret</th>
             <th style={cellStyle}>Activé le</th>
             <th style={cellStyle}>Parent</th>
-            <th style={cellStyle}>Enfant</th>
+            <th style={cellStyle}>Enfants</th>
           </tr>
         </thead>
         <tbody>
